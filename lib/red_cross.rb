@@ -5,22 +5,12 @@ require 'segment'
 
 module RedCross
   class << self
-    def track(user_id, event, topic)
-      Configuration.segment.track(
-          {
-              user_id: user_id,
-              event: event
-          }
-      )
+    def track(attrs, topic = "")
+      Configuration.segment.track(attrs)
     end
 
-    def identify(user_id, traits, topic)
-      Configuration.segment.identify(
-          {
-              user_id: user_id,
-              traits: traits
-          }
-      )
+    def identify(attrs, topic = "")
+      Configuration.segment.identify(attrs)
     end
   end
 end
