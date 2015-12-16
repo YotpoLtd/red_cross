@@ -7,11 +7,13 @@ module RedCross
   class << self
     def track(attrs, topic = "")
       Configuration.segment.track(attrs)
-      Configuration.segment.flush
     end
 
     def identify(attrs, topic = "")
       Configuration.segment.identify(attrs)
+    end
+
+    def flush
       Configuration.segment.flush
     end
   end
