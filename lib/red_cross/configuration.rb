@@ -16,6 +16,7 @@ module RedCross
       end
 
       def init_influxdb
+        return unless influxdb_connect
         InfluxDB::Rails.configure do |config|
           config.influxdb_database = influxdb_connect[:database] || 'red_cross_db'
           config.influxdb_hosts    = [(influxdb_connect[:host] || 'localhost')]
@@ -25,6 +26,7 @@ module RedCross
           config.series_name_for_db_runtimes         = "db"
         end
         @influxdb = InfluxDB::Rails.client
+        InfluxDB::Rails.client.stop!
       end
 
     end
