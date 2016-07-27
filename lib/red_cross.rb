@@ -23,8 +23,9 @@ module RedCross
 
       # Measurement has to include event and properties
       def monitor(attrs)
-        data = {values: {count: 1}, tags: attrs[:properties]}
+        data = { values: { count: (attrs[:count] || 1) }, tags: attrs[:properties] }
         Configuration.influxdb.write_point(attrs[:event].snakecase , data)
+        InfluxDB::Rails.client.stop!
       end
 
     end
