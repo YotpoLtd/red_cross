@@ -20,7 +20,9 @@ module RedCross
       end
 
       def monitor(attrs)
-        []
+        data = { values: { count: (attrs[:count] || 1) }, tags: attrs[:properties] }
+        Configuration.influxdb.write_point(attrs[:event].snakecase , data)
+        Configuration.influxdb.writer.worker.stop!
       end
     end
 end
