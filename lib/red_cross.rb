@@ -19,5 +19,8 @@ module RedCross
         Configuration.segment.flush
       end
 
+      def monitor
+        []
+      end
     end
 end

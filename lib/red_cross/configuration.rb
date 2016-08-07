@@ -1,7 +1,7 @@
 module RedCross
   module Configuration
     class << self
-      attr_accessor :path, :segment_write_key, :segment
+      attr_accessor :path, :segment_write_key, :segment, :influxdb_connect
 
       def configure
         yield self
