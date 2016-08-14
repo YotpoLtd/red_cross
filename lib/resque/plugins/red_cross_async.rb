@@ -7,20 +7,16 @@ module Resque
         {}
       end
 
-      def after_perform_flush(*args)
+      def after_perform_actions(*args)
         RedCross.flush
+        send_metrics('performed', *args)
       end
 
       def before_perform_send_monitor_data(*args)
         send_metrics('before_perform', *args)
       end
 
-      def after_perform_send_monitor_data(*args)
-        send_metrics('performed', *args)
-      end
-
-      def on_failure_send_monitor_data(*args)
-        args.shift
+      def on_failure_send_monitor_data(e, *args)
         send_metrics('failed', *args)
       end
 
