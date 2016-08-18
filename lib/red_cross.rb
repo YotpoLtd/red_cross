@@ -10,11 +10,11 @@ require 'red_cross/trackers/http_tracker'
 
 module RedCross
     class << self
-      def track(attrs, topic = "")
+      def track(attrs, topic = '')
         Configuration.tracker.track(attrs)
       end
 
-      def identify(attrs, topic = "")
+      def identify(attrs, topic = '')
         Configuration.tracker.identify(attrs)
       end
 
