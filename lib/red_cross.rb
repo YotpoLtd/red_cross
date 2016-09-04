@@ -4,9 +4,12 @@ require 'segment'
 require 'typhoeus'
 require 'resque/plugins/red_cross_async'
 require 'resque'
+require 'influxdb'
+require 'red_cross/logger'
 require 'red_cross/trackers/base'
 require 'red_cross/trackers/segment_tracker'
 require 'red_cross/trackers/http_tracker'
+require 'red_cross/trackers/monitor_tracker'
 
 module RedCross
     class << self
@@ -20,10 +23,6 @@ module RedCross
 
       def flush
         Configuration.tracker.flush
-      end
-
-      def monitor(attrs)
-        []
       end
 
       def method_missing(m, *args, &block)
