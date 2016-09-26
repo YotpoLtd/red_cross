@@ -32,4 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'resque', '~> 1.25'
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_dependency 'influxdb', '~> 0.3.7'
 end
