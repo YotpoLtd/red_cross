@@ -1,3 +1,4 @@
+require 'active_support/all'
 module RedCross
   module Trackers
     class MonitorTracker < RedCross::Trackers::Base
@@ -27,9 +28,10 @@ module RedCross
 
       def monitor_request(attrs)
         return if client.nil?
-        data = { values: { count: (attrs[:count] || 1) }, tags: attrs[:properties] }
+        properties = attrs[:properties] || {}
+        values = { count: 1 }.merge((properties.delete(:fields) || {}))
         begin
-          client.write_point(attrs[:event], data)
+          client.write_point(attrs[:event], { values: values, tags: properties })
           client.writer.worker.stop!
         rescue => e
           RedCross.error("Failed to send monitor data for event: #{attrs[:event]} , Error #{e.message}")
