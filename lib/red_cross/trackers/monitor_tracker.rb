@@ -2,7 +2,6 @@ require 'active_support/all'
 module RedCross
   module Trackers
     class MonitorTracker < RedCross::Trackers::Base
-      extend RedCross::Log
       attr_accessor  :client
 
       def initialize(database = '', host = '', port = '')
@@ -34,7 +33,7 @@ module RedCross
           client.write_point(attrs[:event], { values: values, tags: properties })
           client.writer.worker.stop!
         rescue => e
-          RedCross.error("Failed to send monitor data for event: #{attrs[:event]} , Error #{e.message}")
+          RedCross::Log.error("Failed to send monitor data for event: #{attrs[:event]} , Error #{e.message}")
         end
       end
     end
