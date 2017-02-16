@@ -1,7 +1,7 @@
 module RedCross
   module Trackers
     class HttpTracker < RedCross::Trackers::Base
-      class FailedPushingToEventbus < Exception
+      class FailedPushingToKafka < Exception
         def initialize(code, route, return_code)
           @code = code
           @route = route
@@ -9,17 +9,17 @@ module RedCross
         end
 
         def to_s
-          "Failed pushing to Eventbus. Error code: #{@code}, route: #{@route} Error: #{@return_code.to_s}"
+          "Failed pushing to Kafka. Error code: #{@code}, route: #{@route} Error: #{@return_code.to_s}"
         end
       end
-      attr_accessor :eventbus_host
+      attr_accessor :clerk_host
 
       def initialize(host)
-        @eventbus_host = host
+        @clerk_host = host
       end
 
-      def track(route, attrs, additional_args = {})
-        eventbus_request(@eventbus_host + route, attrs.merge(additional_args), :post)
+      def track(attrs, additional_args = {})
+        clerk_request(@clerk_host,attrs.merge(additional_args), :post)
       end
 
       def identify(attrs, additional_args = {})
@@ -30,7 +30,7 @@ module RedCross
         {}
       end
 
-      def eventbus_request(request_url, params, method = :get)
+      def clerk_request(request_url, params, method = :get)
         request = Typhoeus::Request.new(
             request_url,
             method: method,
@@ -41,7 +41,7 @@ module RedCross
           if response.success?
             return true
           else
-            raise FailedPushingToEventbus.new(response.response_code ,request_url, response.return_code)
+            raise FailedPushingToKafka.new(response.response_code ,request_url, response.return_code)
           end
         end
         request.run
