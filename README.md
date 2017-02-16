@@ -1,7 +1,7 @@
 # RedCross
 
 This Gem reports events to segment - to be added:
-Sending events to an eventbus
+Sending events to an event collector which will use Kafka
 
 ## Installation
 
