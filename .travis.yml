@@ -1,4 +1,12 @@
 language: ruby
 rvm:
-  - 2.2.1
+- 2.2.1
 before_install: gem install bundler -v 1.10.6
+deploy:
+  provider: rubygems
+  api_key:
+    secure: jsgcttTUR07MNsYa3g4zgpeVJocSzhIUWnUCGRkWDx5RS60noLz0cGwbcMGZ2D544tMGxXRNwYtB8fr24P9B9JEwXndOgUyzJa+6/eeFSOZ/GJAmu8+LJ8pQZR4kV87D1TkOtvS0RZCB3F2NYYaxd5uqm66ROos7Q811G7FNQkklnqFjCR5ASSLukekGE7aLTVtSV5oIVTC4vxiVLuCkVC27zELIJbTi1j7Blp8ANJGVN8MJBKTCTxYmXmQPzp5Tu0kThAHsr+rZ24Dt/er30QTRrF0weTDy8B21AhXSWED7MQAUpZiRZtLmIsaS7sLB9Ulmuzfwzl8NW7rAzZymxiCuiH5rloziaNlOdlBfVWHNhTxQWmZGT3V2b19rghw97SAF4geKilabl5Dcj+7i8N4wVWzIxxe0VRk+10QmRgDL5lz3KarcorlOYyifCdbFXcsakroKhBOTXwQzGeIw5O15ZnLnXHueppB7DNok7xXcfIrYNZ2qgwPuCpc040EaG7AdGaSVYkNnPt93m51hu7f51u4HvVs6gS7yLyvTH/0x0S3fSB9b+cmNPty+9L081hP4IOxXqPkQEFxLN9mH/+wMtjylxb2NRZr79P7etDxb/2QOFloAasjQfzeu1p6XjCxy8B7gFrq8o/YEn8nbjoRA0YdhNQCQbaSMO1EnsEs=
+  gem: red_cross
+  on:
+    repo: YotpoLtd/red_cross
+    branch: master
