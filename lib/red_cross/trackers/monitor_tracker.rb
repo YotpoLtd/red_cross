@@ -1,11 +1,10 @@
-require 'active_support/all'
 module RedCross
   module Trackers
     class MonitorTracker < RedCross::Trackers::Base
       attr_accessor  :client
 
       def initialize(database = '', host = '', port = '')
-        return unless database.present? && host.present? && port.present?
+        [database, host, port].each{ |var| return if !var.is_a?(String) || var.empty? }
         @client = InfluxDB::Client.new database,
                                        host:  host,
                                        port:  port,
