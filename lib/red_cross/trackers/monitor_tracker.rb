@@ -3,8 +3,7 @@ module RedCross
     class MonitorTracker < RedCross::Trackers::Base
       attr_accessor  :client
 
-      def initialize(database = '', host = '', port = '')
-        [database, host, port].each{ |var| return if !var.is_a?(String) || var.empty? }
+      def initialize(database = 'test', host = 'localhost', port = 8086)
         @client = InfluxDB::Client.new database,
                                        host:  host,
                                        port:  port,
