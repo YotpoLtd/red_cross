@@ -1,34 +1,38 @@
 require 'red_cross/version'
 require 'red_cross/configuration'
-require 'segment'
-require 'typhoeus'
-require 'resque'
-require 'influxdb'
-require 'red_cross/logger'
-require 'red_cross/trackers/base'
-require 'red_cross/trackers/segment_tracker'
-require 'red_cross/trackers/http_tracker'
-require 'red_cross/trackers/monitor_tracker'
 
 module RedCross
     class << self
       def track(attrs, topic = '')
-        Configuration.tracker.track(attrs)
+        @conf.track(attrs, topic)
       end
 
       def identify(attrs, topic = '')
-        Configuration.tracker.identify(attrs)
+        @conf.identify(attrs, topic)
       end
 
       def flush
-        Configuration.tracker.flush
+        @conf.flush()
       end
 
-      def method_missing(m, *args, &block)
-        match = /(.*?)_track/.match(m.to_s)
-        tracker = match.captures.first.to_sym unless match.nil?
-        super unless Configuration.trackers.keys.include? tracker
-        Configuration.trackers[tracker].send(:track, *args)
+      def configure=(trackers)
+        @conf = trackers
+      end
+
+      def log(level, message)
+        if @conf.logger
+          @conf.logger.send(level, message)
+        end
+      end
+
+      %w( fatal error warn info debug unknown ).each do |severity|
+        eval <<-EOM, nil, __FILE__, __LINE__ + 1
+        def #{severity}(msg)
+          if @conf.logger
+            @conf.logger.#{severity} msg
+          end
+        end
+        EOM
       end
     end
 end

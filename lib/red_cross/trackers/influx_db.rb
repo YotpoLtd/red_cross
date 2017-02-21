@@ -1,10 +1,15 @@
+require 'influxdb'
 module RedCross
   module Trackers
-    class MonitorTracker < RedCross::Trackers::Base
+    class InfluxDB < RedCross::Trackers::Base
       attr_accessor  :client
 
+      def self.type
+        :influxdb
+      end
+
       def initialize(database = 'test', host = 'localhost', port = 8086)
-        @client = InfluxDB::Client.new database,
+        @client = ::InfluxDB::Client.new database,
                                        host:  host,
                                        port:  port,
                                        async: true,
@@ -31,7 +36,7 @@ module RedCross
           client.write_point(attrs[:event], { values: values, tags: properties })
           client.writer.worker.stop!
         rescue => e
-          RedCross::Log.error("Failed to send monitor data for event: #{attrs[:event]} , Error #{e.message}")
+          RedCross.error("Failed to send monitor data for event: #{attrs[:event]} , Error #{e.message}")
         end
       end
     end

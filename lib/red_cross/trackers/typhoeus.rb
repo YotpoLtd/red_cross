@@ -1,6 +1,7 @@
+require 'typhoeus'
 module RedCross
   module Trackers
-    class HttpTracker < RedCross::Trackers::Base
+    class Typhoeus < RedCross::Trackers::Base
       class FailedPushingToKafka < Exception
         def initialize(code, route, return_code)
           @code = code
@@ -13,7 +14,9 @@ module RedCross
         end
       end
       attr_accessor :clerk_host
-
+      def self.type
+        :typhoeus
+      end
       def initialize(host)
         @clerk_host = host
       end

@@ -7,7 +7,7 @@ module Resque
             task_name: name,
             status: 'enqueued'
         }
-        RedCross.monitor_track(event: 'resque_scheduler', properties: properties)
+        RedCross.track(event: 'resque_scheduler', properties: properties)
         default_last_enqueued_at(name, timestemp)
       end
     end

@@ -21,7 +21,28 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+In your apps boot process you should add the following:
+
+```ruby
+require 'red_cross/trackers/influx_db'
+require 'red_cross/trackers/typhoeus'
+require 'red_cross/trackers/segment'
+require 'red_cross/trackers/log'
+
+RedCross.configure = RedCross::Configuration.new do |builder|
+  builder.provider :segment, ENV['SEGMENT_WRITE_KEY']
+  builder.provider :typhoeus, ENV['CLERK_URL']
+  builder.provider :influxdb, ENV['INFLUXDB_HOST'], ENV['INFLUXDB_PORT'], ENV['INFLUXDB_DB']
+  builder.provider :log, 'logs/red_cross.log', 'project_name'
+  builder.logger = Logger.new(STDOUT)
+end
+```
+
+Once added you can do this anywhere you like in your code
+
+```ruby
+RedCross.track('event')
+```
 
 ## Contributing
 
