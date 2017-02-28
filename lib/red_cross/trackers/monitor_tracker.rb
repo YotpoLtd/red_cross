@@ -3,7 +3,8 @@ module RedCross
     class MonitorTracker < RedCross::Trackers::Base
       attr_accessor  :client
 
-      def initialize(database = 'test', host = 'localhost', port = 8086)
+      def initialize(database = 'test', host = 'localhost', port = 8086, logger = false)
+        InfluxDB::Logging.logger = logger
         @client = InfluxDB::Client.new database,
                                        host:  host,
                                        port:  port,
