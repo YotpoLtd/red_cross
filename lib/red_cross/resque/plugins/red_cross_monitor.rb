@@ -5,7 +5,7 @@ module Resque
       # Please add count: MY_NUMBER in case your metric value differs 1
       def job_method(*args)
         #Add the method that triggered by the job
-        'no_job_method'
+        'no_method_job'
       end
 
       def before_schedule_send_monitor_data(*args)
@@ -47,7 +47,7 @@ module Resque
       def default_event_properties(*args)
         @event_properties ||= { fields: {  } }
         @event_properties[:class] ||= self.name
-        event_job_method =  @event_properties[:event_method].nil? ? job_method(*args) : @event_properties[:event_method]
+        event_job_method = job_method(*args)
         if (!event_job_method.nil? && ([String, Integer, Symbol].include? event_job_method.class))
           @event_properties[:event_method] = event_job_method
         else
