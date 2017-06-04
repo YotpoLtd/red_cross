@@ -47,6 +47,7 @@ module Resque
       def default_event_properties(*args)
         @event_properties ||= { fields: {  } }
         @event_properties[:class] ||= self.name
+        @event_properties[:queue] ||= Resque.queue_from_class(self)
         event_job_method = job_method(*args)
         if (!event_job_method.nil? && ([String, Integer, Symbol].include? event_job_method.class))
           @event_properties[:event_method] = event_job_method
