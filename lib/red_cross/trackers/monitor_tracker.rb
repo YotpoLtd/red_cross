@@ -9,6 +9,8 @@ module RedCross
                                        host:  host,
                                        port:  port,
                                        async: true,
+                                       write_timeout: 0.01,
+                                       read_timeout: 0.01,
                                        retry: false
       end
 
