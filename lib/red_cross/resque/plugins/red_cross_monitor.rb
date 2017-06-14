@@ -8,20 +8,8 @@ module Resque
         'no_method_job'
       end
 
-      def before_schedule_send_monitor_data(*args)
-        send_metrics('before_schedule', *args)
-      end
-
       def after_schedule_send_monitor_data(*args)
         send_metrics('after_schedule', *args)
-      end
-
-      def before_delayed_enqueue_send_monitor_data(*args)
-        send_metrics('before_delayed_enqueue', *args)
-      end
-
-      def before_enqueue_send_monitor_data(*args)
-        send_metrics('before_enqueue', *args)
       end
 
       def after_enqueue_send_monitor_data(*args)
