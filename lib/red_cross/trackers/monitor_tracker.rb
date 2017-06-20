@@ -10,8 +10,8 @@ module RedCross
                                        port:  port,
                                        async: true,
                                        retry: false,
-                                       write_timeout:  write_timeout,
-                                       read_timeout: read_timeout
+                                       write_timeout:  write_timeout.to_f,
+                                       read_timeout: read_timeout.to_f
       end
 
       def track(attrs, additional_args = {})
