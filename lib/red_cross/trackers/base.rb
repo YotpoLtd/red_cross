@@ -1,6 +1,8 @@
 module RedCross
   module Trackers
     class Base
+      include RedCross::Logging
+
       def track(attrs, additional_args = {})
         raise NotImplementedError
       end
