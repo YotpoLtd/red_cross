@@ -10,8 +10,8 @@ module RedCross
                                        port:  port,
                                        async: true,
                                        retry: false,
-                                       write_timeout:  write_timeout,
-                                       read_timeout: read_timeout
+                                       write_timeout:  write_timeout.to_f,
+                                       read_timeout: read_timeout.to_f
       end
 
       def track(attrs, additional_args = {})
@@ -28,13 +28,27 @@ module RedCross
 
       def monitor_request(attrs)
         return if client.nil?
+        event = attrs[:event].to_s
         properties = attrs[:properties] || {}
         values = { count: 1 }.merge((properties.delete(:fields) || {}))
         begin
-          client.write_point(attrs[:event], { values: values, tags: properties })
+          client.write_point(event, { values: values, tags: properties })
           client.writer.worker.stop!
         rescue => e
-          RedCross::Log.error("Failed to send monitor data for event: #{attrs[:event]} , Error #{e.message}")
+          error_data = {
+              log_message: 'Failed to send monitor data to InfluxDB',
+              event_arguments: {
+                  event: event,
+                  tags: properties,
+                  fields: values
+              },
+              exception: {
+                  class: e.class.to_s,
+                  message: e.message,
+                  backtrace: e.backtrace
+              }
+          }
+          log :error, error_data
         end
       end
     end
