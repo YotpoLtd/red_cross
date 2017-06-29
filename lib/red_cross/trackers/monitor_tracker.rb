@@ -32,7 +32,7 @@ module RedCross
         properties = attrs[:properties] || {}
         values = { count: 1 }.merge((properties.delete(:fields) || {}))
         begin
-          client.write_point(event, { values: values, tags: properties })
+          client.write_point(event, { values: compact(values), tags: compact(properties) })
           client.writer.worker.stop!
         rescue => e
           error_data = {
@@ -50,6 +50,10 @@ module RedCross
           }
           log :error, error_data
         end
+      end
+
+      def compact(hash)
+        hash.respond_to?(:compact) ? hash.compact : hash.delete_if {|k,v| v == nil }
       end
     end
   end
