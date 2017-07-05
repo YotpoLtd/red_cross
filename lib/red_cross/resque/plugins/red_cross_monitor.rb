@@ -39,9 +39,9 @@ module Resque
         send_metrics('performed', *args)
       end
 
-      def on_failure_send_monitor_data(e, *args)
+      def on_failure_send_monitor_data(*args)
         @job_end_time = Time.now()
-        send_metrics('failed', *args, e)
+        send_metrics('failed', *args)
       end
 
       def default_event_properties(*args)
@@ -56,10 +56,12 @@ module Resque
         end
       end
 
-      def send_metrics(job_status, *args, e = nil)
+      def send_metrics(job_status, *args)
         default_event_properties(*args)
         @event_properties[:fields][:run_time] = ((@job_end_time - @job_start_time)*1000).to_i if %w(performed failed).include? job_status
-        @event_properties[:exception] = e.class.name unless e.nil?
+        if args.is_a?(Array) && args[0].is_a?(Exception)
+          @event_properties[:exception] = args.shift.class.to_s
+        end
         ::RedCross.monitor_track(event: 'resque', properties: @event_properties.merge({ job_status: job_status }))
       end
     end
