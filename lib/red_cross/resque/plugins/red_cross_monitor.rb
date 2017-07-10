@@ -29,40 +29,39 @@ module Resque
       end
 
       def before_perform_send_monitor_data(*args)
-        @job_start_time = Time.now()
+        @red_cross_job_start_time = Time.now()
         send_metrics('before_perform', *args)
       end
 
       def after_perform_actions(*args)
         ::RedCross.flush
-        @job_end_time = Time.now()
+        @red_cross_job_end_time = Time.now()
         send_metrics('performed', *args)
       end
 
-      def on_failure_send_monitor_data(*args)
-        @job_end_time = Time.now()
+      def on_failure_send_monitor_data(e, *args)
+        @red_cross_job_end_time = Time.now()
         send_metrics('failed', *args)
       end
 
       def default_event_properties(*args)
-        @event_properties ||= { fields: {  } }
-        @event_properties[:class] ||= self.name
-        @event_properties[:queue] ||= Resque.queue_from_class(self)
+        event_properties = { class: self.name, fields: { } }
+        event_properties[:exception] = args.shift.class.to_s if args.is_a?(Array) && args[0].is_a?(Exception)
+        queue = Resque.queue_from_class(self)
+        (queue && !queue.to_s.empty?) ? event_properties[:queue] = queue : event_properties[:class]
         event_job_method = job_method(*args)
         if (!event_job_method.nil? && ([String, Integer, Symbol].include? event_job_method.class))
-          @event_properties[:event_method] = event_job_method
+          event_properties[:event_method] = event_job_method
         else
-          @event_properties[:event_method] = 'no_valid_job_method'
+          event_properties[:event_method] = 'no_valid_job_method'
         end
+        event_properties
       end
 
       def send_metrics(job_status, *args)
-        default_event_properties(*args)
-        @event_properties[:fields][:run_time] = ((@job_end_time - @job_start_time)*1000).to_i if %w(performed failed).include? job_status
-        if args.is_a?(Array) && args[0].is_a?(Exception)
-          @event_properties[:exception] = args.shift.class.to_s
-        end
-        ::RedCross.monitor_track(event: 'resque', properties: @event_properties.merge({ job_status: job_status }))
+        event_properties = default_event_properties(*args)
+        event_properties[:fields][:run_time] = ((@red_cross_job_end_time - @red_cross_job_start_time)*1000).to_i if %w(performed failed).include? job_status
+        ::RedCross.monitor_track(event: 'resque', properties: event_properties.merge({ job_status: job_status }))
       end
     end
   end
