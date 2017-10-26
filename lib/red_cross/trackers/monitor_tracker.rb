@@ -3,12 +3,20 @@ module RedCross
     class MonitorTracker < RedCross::Trackers::Base
       attr_accessor  :client
 
-      def initialize(database = 'test', host = 'localhost', port = 8086, write_timeout = 0.05, read_timeout = 0.05, logger = false)
+      def initialize(database = 'test', host = 'localhost', port = 8086, write_timeout = 0.05, read_timeout = 0.05,
+                     logger = false, async = true)
         InfluxDB::Logging.logger = logger
+        async_options = async
+        if async_options == true
+          async_options = {
+              num_worker_threads: 1
+          }
+        end
+
         @client = InfluxDB::Client.new database,
                                        host:  host,
                                        port:  port,
-                                       async: true,
+                                       async: async_options,
                                        retry: false,
                                        write_timeout:  write_timeout.to_f,
                                        read_timeout: read_timeout.to_f
