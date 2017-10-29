@@ -60,7 +60,7 @@ module Resque
 
       def send_metrics(job_status, *args)
         event_properties = default_event_properties(*args)
-        event_properties[:fields][:run_time] = ((@red_cross_job_end_time - @red_cross_job_start_time)*1000).to_i if %w(performed failed).include? job_status
+        event_properties[:fields][:run_time] = ((@red_cross_job_end_time.to_f - @red_cross_job_start_time.to_f)*1000).to_i if %w(performed failed).include? job_status
         ::RedCross.monitor_track(event: 'resque', properties: event_properties.merge({ job_status: job_status }))
       end
     end
