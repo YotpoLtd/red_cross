@@ -14,6 +14,10 @@ module RedCross
       def flush
         raise NotImplementedError
       end
+
+      def group(attrs, additional_args = {})
+        raise NotImplementedError
+      end
     end
   end
 end

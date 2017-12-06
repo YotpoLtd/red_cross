@@ -34,6 +34,10 @@ module RedCross
         {}
       end
 
+      def group(attrs, additional_args = {})
+        {}
+      end
+
       def monitor_request(attrs)
         return if client.nil?
         event = attrs[:event].to_s

@@ -18,6 +18,10 @@ module RedCross
       def flush
         @client.flush
       end
+
+      def group(attrs, additional_args = {})
+        @client.group(attrs)
+      end
     end
   end
 end

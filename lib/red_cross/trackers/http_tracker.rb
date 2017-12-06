@@ -30,6 +30,10 @@ module RedCross
         {}
       end
 
+      def group(attrs, additional_args = {})
+        {}
+      end
+
       def eventbus_request(request_url, params, method = :get)
         request = Typhoeus::Request.new(
             request_url,

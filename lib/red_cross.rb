@@ -24,6 +24,10 @@ module RedCross
         Configuration.tracker.flush
       end
 
+      def group(attrs, topic = '')
+        Configuration.tracker.group(attrs)
+      end
+
       def method_missing(m, *args, &block)
         match = /(.*?)_track/.match(m.to_s)
         tracker = match.captures.first.to_sym unless match.nil?
