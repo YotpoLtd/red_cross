@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'analytics-ruby', '~> 2.2.2'
-  spec.add_dependency 'typhoeus', '~> 0.6.5'
+  spec.add_dependency 'typhoeus', '~> 1'
   spec.add_dependency 'resque', '>= 1.26'
   spec.add_dependency 'influxdb', '~> 0.5.0'
 
