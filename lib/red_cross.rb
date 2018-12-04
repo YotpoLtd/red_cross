@@ -9,6 +9,7 @@ require 'red_cross/trackers/base'
 require 'red_cross/trackers/segment_tracker'
 require 'red_cross/trackers/http_tracker'
 require 'red_cross/trackers/monitor_tracker'
+require 'red_cross/trackers/application_tracker'
 
 module RedCross
     class << self
