@@ -9,7 +9,7 @@ module RedCross
     class ApplicationTracker < RedCross::Trackers::Base
       attr_accessor  :client
 
-      def initialize(database = 'application_metrics', host, port)
+      def initialize(host, port, database = 'application_metrics')
         @client = InfluxDB::Client.new udp: {
                                            host:  host,
                                            port:  port,
