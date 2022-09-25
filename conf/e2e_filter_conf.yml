@@ -1,0 +1,13 @@
+  <%
+    def get_bool_value(env_key, default_value)
+    return true if ENV[env_key] == 'true'
+    return false if ENV[env_key] == 'false'
+    default_value
+    end
+    %>
+
+EVENT_FILTERING_ENABLED: <%= get_bool_value('EVENT_FILTERING_ENABLED', false) %>
+PREFIXES:
+  EMAILS: <%= (ENV['PRODUCTION_E2E_TEST_EMAILS'] || '').split(',') %>
+  DOMAINS: <%= (ENV['PRODUCTION_E2E_TEST_DOMAINS'] || '').split(',') %>
+
