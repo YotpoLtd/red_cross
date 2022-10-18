@@ -1,34 +1,35 @@
-require 'logger'
+require '../lib/red_cross/logging'
+include RedCross::Logging
+
+BEGIN {
+  begin
+    E2E_FILTER_CONF = YAML::load(ERB.new(IO.read(File.expand_path('./conf/e2e_filter_conf.yml', __FILE__))).result, fallback: []).with_indifferent_access
+    log(Logger::INFO, {
+                  log_tag: 'production_e2e_filter',
+                  message: "Successfully initialized red_cross production e2e filter values"
+                })
+  rescue => e
+    log(Logger::Error, {
+                   log_tag: 'production_e2e_filter',
+                   message: "Unable to initialize red_cross production e2e filter due to #{e.message}"
+                 })
+  end
+}
 
 module ProductionE2EFilter
+  @e2e_emails = E2E_FILTER_CONF['PREFIXES']['EMAILS']
+  @e2e_domains = E2E_FILTER_CONF['PREFIXES']['DOMAINS']
+
   def self.log_tag
     return 'production_e2e_filter'
   end
-
-  BEGIN {
-    logger = Logger.new(STDOUT)
-    begin
-      E2E_FILTER_CONF = YAML::load(ERB.new(IO.read(File.expand_path('./conf/e2e_filter_conf.yml', __FILE__))).result).with_indifferent_access
-      @e2e_emails = E2E_FILTER_CONF['PREFIXES']['EMAILS']
-      @e2e_domains = E2E_FILTER_CONF['PREFIXES']['DOMAINS']
-      logger.info({
-                    log_tag: self.log_tag,
-                    message: "Successfully initialized red_cross production e2e filter values"
-                  })
-    rescue => e
-      logger.error({
-                     log_tag: self.log_tag,
-                     message: "Unable to initialize red_cross production e2e filter due to #{e.message}"
-                   })
-    end
-  }
 
   def is_e2e_test_flow?(properties)
     begin
       return false unless is_filtering_enabled?
       filter_email?(properties[:email]) || filter_domain?(properties[:website], properties[:storeDomain]) ? true : false
     rescue => e
-      logger.error({
+      log(Logger::Error, {
                      log_tag: self.log_tag,
                      message: "Failed to check for production e2e filter values due to #{e.message}"
                    })
