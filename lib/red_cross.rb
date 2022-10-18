@@ -10,6 +10,7 @@ require 'red_cross/trackers/segment_tracker'
 require 'red_cross/trackers/http_tracker'
 require 'red_cross/trackers/monitor_tracker'
 require 'red_cross/trackers/application_tracker'
+require 'production_e2e_filter'
 
 include ProductionE2EFilter
 
