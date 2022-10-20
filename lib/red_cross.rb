@@ -12,7 +12,7 @@ require 'red_cross/trackers/monitor_tracker'
 require 'red_cross/trackers/application_tracker'
 require 'production_e2e_filter'
 
-include ProductionE2EFilter
+include RedCross::ProductionE2EFilter
 
 module RedCross
     class << self
