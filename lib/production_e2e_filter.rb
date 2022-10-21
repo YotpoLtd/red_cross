@@ -4,24 +4,22 @@ require_relative 'red_cross/logging'
 
 include RedCross::Logging
 
+LOG_TAG = 'production_e2e_filter'
+
 module RedCross
   module ProductionE2EFilter
-
-    def self.log_tag
-      'production_e2e_filter'
-    end
 
     begin
       @e2e_filter_conf = YAML::load(ERB.new(IO.read(File.expand_path('../../conf/e2e_filter_conf.yml', __FILE__))).result)
       @e2e_emails = @e2e_filter_conf['PREFIXES']['EMAILS']
       @e2e_domains = @e2e_filter_conf['PREFIXES']['DOMAINS']
       RedCross::Logging.log(Logger::INFO, {
-        log_tag: self.log_tag,
+        log_tag: LOG_TAG,
         message: "Successfully initialized red_cross production e2e filter values"
       })
     rescue => e
       RedCross::Logging.log(Logger::Error, {
-        log_tag: self.log_tag,
+        log_tag: LOG_TAG,
         message: "Unable to initialize red_cross production e2e filter due to #{e.message}"
       })
     end
@@ -32,7 +30,7 @@ module RedCross
         filter_email?(properties[:email]) || filter_domain?(properties[:website], properties[:storeDomain]) ? true : false
       rescue => e
         RedCross::Logging.log(Logger::Error, {
-          log_tag: self.log_tag,
+          log_tag: LOG_TAG,
           message: "Failed to check for production e2e filter values due to #{e.message}"
         })
         false
