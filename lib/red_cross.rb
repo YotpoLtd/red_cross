@@ -17,12 +17,12 @@ include RedCross::ProductionE2EFilter
 module RedCross
     class << self
       def track(attrs, topic = '')
-        return if is_e2e_test_flow?(attrs[:properties])
+        return if is_e2e_test_flow?(attrs[:event], attrs[:properties])
         Configuration.tracker.track(attrs)
       end
 
       def identify(attrs, topic = '')
-        return if is_e2e_test_flow?(attrs[:properties])
+        return if is_e2e_test_flow?(attrs[:event], attrs[:properties])
         Configuration.tracker.identify(attrs)
       end
 
@@ -31,7 +31,7 @@ module RedCross
       end
 
       def group(attrs, topic = '')
-        return if is_e2e_test_flow?(attrs[:properties])
+        return if is_e2e_test_flow?(attrs[:event], attrs[:properties])
         Configuration.tracker.group(attrs)
       end
 
