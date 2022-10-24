@@ -38,7 +38,7 @@ module RedCross
       rescue => e
         RedCross::Logging.log(:error, {
           log_tag: LOG_TAG,
-          message: "Failed to check for production e2e filter values due to Exception: #{e.backtrace}"
+          message: "Failed to check for production e2e filter values due to Exception: #{e.message}"
         })
         false
       end
@@ -52,7 +52,7 @@ module RedCross
 
     def filter_email?(email)
       E2E_EMAILS.each do |test_prefix|
-        return true if email&.start_with?(test_prefix)
+        return true if !email.nil? && email.start_with?(test_prefix)
       end
       false
     end
@@ -60,7 +60,7 @@ module RedCross
     def filter_domain?(*domain_candidates)
       E2E_DOMAINS.each do |test_prefix|
         domain_candidates.each do |domain_candidate|
-          return true if domain_candidate.start_with?(test_prefix)
+          return true if !domain_candidate.nil? && domain_candidate.start_with?(test_prefix)
         end
       end
       false
