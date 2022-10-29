@@ -14,20 +14,24 @@ module RedCross
       E2E_EMAILS = E2E_FILTER_CONF['PREFIXES']['EMAILS']
       E2E_DOMAINS = E2E_FILTER_CONF['PREFIXES']['DOMAINS']
       RedCross::Logging.log(:info, {
+        filtering_enabled: "#{E2E_FILTER_CONF['EVENT_FILTERING_ENABLED']}",
+        emails: "#{E2E_EMAILS}",
+        domains: "#{E2E_DOMAINS}",
         log_tag: LOG_TAG,
         message: "Successfully initialized red_cross production e2e filter values"
       })
     rescue => e
       RedCross::Logging.log(:error, {
         log_tag: LOG_TAG,
-        message: "Unable to initialize red_cross production e2e filter due to Exception: #{e.message}"
+        message: "Unable to initialize red_cross production e2e filter due to Exception: #{e.message}",
+        back_trace: "#{e.backtrace}"
       })
     end
 
     def is_e2e_test_flow?(event_name, properties)
       begin
         return false unless is_filtering_enabled?
-        skip_event = filter_email?(properties[:email]) || filter_domain?(properties[:website], properties[:storeDomain])
+        skip_event = filter_email?(properties[:email], properties[:userEmail], properties[:orgAdminEmail]) || filter_domain?(properties[:website], properties[:storeDomain], properties[:storePlatformDomain])
         if skip_event
           RedCross::Logging.log(:info, {
             log_tag: LOG_TAG,
@@ -38,7 +42,8 @@ module RedCross
       rescue => e
         RedCross::Logging.log(:error, {
           log_tag: LOG_TAG,
-          message: "Failed to check for production e2e filter values due to Exception: #{e.message}"
+          message: "Failed to check for production e2e filter values due to Exception: #{e.message}",
+          back_trace: "#{e.backtrace}"
         })
         false
       end
@@ -50,9 +55,11 @@ module RedCross
       E2E_FILTER_CONF['EVENT_FILTERING_ENABLED']
     end
 
-    def filter_email?(email)
+    def filter_email?(*email_candidates)
       E2E_EMAILS.each do |test_prefix|
-        return true if !email.nil? && email.start_with?(test_prefix)
+        email_candidates.each do |email_candidate|
+          return true if !email_candidate.nil? && email_candidate.start_with?(test_prefix)
+        end
       end
       false
     end
