@@ -22,7 +22,7 @@ module RedCross
       end
 
       def identify(attrs, topic = '')
-        return if is_e2e_test_flow?(attrs[:event], attrs[:properties])
+        return if is_e2e_test_flow?('identify', attrs[:traits])
         Configuration.tracker.identify(attrs)
       end
 
@@ -31,7 +31,7 @@ module RedCross
       end
 
       def group(attrs, topic = '')
-        return if is_e2e_test_flow?(attrs[:event], attrs[:properties])
+        return if is_e2e_test_flow?('group', attrs[:traits])
         Configuration.tracker.group(attrs)
       end
 
